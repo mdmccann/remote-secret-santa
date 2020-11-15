@@ -1,0 +1,7 @@
+spring:
+  data:
+    rest:
+      basePath: /api
+  h2:
+    console:
+      enabled: true
