@@ -1,4 +1,4 @@
-package com.northpole.remotesecretsanta.validation;
+package com.northpole.remotesecretsanta.domain.validation;
 
 import com.northpole.remotesecretsanta.domain.PartyMember;
 import org.springframework.validation.Errors;

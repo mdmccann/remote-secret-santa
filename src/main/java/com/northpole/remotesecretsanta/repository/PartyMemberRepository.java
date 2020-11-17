@@ -1,4 +1,4 @@
-package com.northpole.remotesecretsanta.repoistory;
+package com.northpole.remotesecretsanta.repository;
 
 import com.northpole.remotesecretsanta.domain.PartyMember;
 import org.springframework.data.repository.CrudRepository;

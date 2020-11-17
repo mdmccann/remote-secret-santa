@@ -1,5 +1,6 @@
-package com.northpole.remotesecretsanta.validation;
+package com.northpole.remotesecretsanta.domain.validation;
 
+import com.northpole.remotesecretsanta.config.ValidationProperties;
 import com.northpole.remotesecretsanta.domain.SecretSanta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SecretSantaValidatorTest {
 
+  private static final BigDecimal MIN_GIFT_COST = BigDecimal.ZERO;
+  private static final Integer MIN_PARTY_MEMBERS = 3;
+
+  @Mock
+  private ValidationProperties validationProperties;
   @Mock
   private Errors errors;
   @Mock
@@ -29,7 +35,7 @@ class SecretSantaValidatorTest {
 
   @BeforeEach
   void setUp() {
-    validator = new SecretSantaValidator();
+    validator = new SecretSantaValidator(validationProperties);
   }
 
   @Test
@@ -39,7 +45,9 @@ class SecretSantaValidatorTest {
 
   @Test
   void validate_valid() {
-    when(secretSanta.getMaxGiftCost()).thenReturn(BigDecimal.TEN);
+    when(validationProperties.getMinGiftCost()).thenReturn(MIN_GIFT_COST);
+    when(validationProperties.getMinPartyMembers()).thenReturn(MIN_PARTY_MEMBERS);
+    when(secretSanta.getMaxGiftCost()).thenReturn(BigDecimal.ZERO);
     when(secretSanta.getGiftDispatchDeadline()).thenReturn(LocalDate.now());
     when(secretSanta.getMaxPartyMembers()).thenReturn(3);
     validator.validate(secretSanta, errors);
@@ -48,29 +56,27 @@ class SecretSantaValidatorTest {
 
   @Test
   void validate_maxGiftCost_null() {
+    when(validationProperties.getMinGiftCost()).thenReturn(MIN_GIFT_COST);
     validator.validate(secretSanta, errors);
-    verify(errors).rejectValue("maxGiftCost", "secretSanta.maxGiftCost.not.valid");
+    verify(errors).rejectValue(
+        "maxGiftCost",
+        "secretSanta.maxGiftCost.not.valid",
+        new Object[]{MIN_GIFT_COST},
+        "Max Gift Cost is invalid."
+    );
   }
 
   @Test
-  void validate_maxGiftCost_negative() {
+  void validate_maxGiftCost_belowMinimumAllowed() {
+    when(validationProperties.getMinGiftCost()).thenReturn(MIN_GIFT_COST);
     when(secretSanta.getMaxGiftCost()).thenReturn(BigDecimal.valueOf(-1));
     validator.validate(secretSanta, errors);
-    verify(errors).rejectValue("maxGiftCost", "secretSanta.maxGiftCost.not.valid");
-  }
-
-  @Test
-  void validate_maxGiftCost_zero() {
-    when(secretSanta.getMaxGiftCost()).thenReturn(BigDecimal.ZERO);
-    validator.validate(secretSanta, errors);
-    verify(errors).rejectValue("maxGiftCost", "secretSanta.maxGiftCost.not.valid");
-  }
-
-  @Test
-  void validate_maxGiftCost_valid() {
-    when(secretSanta.getMaxGiftCost()).thenReturn(BigDecimal.ONE);
-    validator.validate(secretSanta, errors);
-    verify(errors, never()).rejectValue("maxGiftCost", "secretSanta.maxGiftCost.not.valid");
+    verify(errors).rejectValue(
+        "maxGiftCost",
+        "secretSanta.maxGiftCost.not.valid",
+        new Object[]{MIN_GIFT_COST},
+        "Max Gift Cost is invalid."
+    );
   }
 
   @Test
@@ -87,30 +93,25 @@ class SecretSantaValidatorTest {
   }
 
   @Test
-  void validate_giftDispatchDeadline_valid() {
-    when(secretSanta.getGiftDispatchDeadline()).thenReturn(LocalDate.now().plusDays(10));
-    validator.validate(secretSanta, errors);
-    verify(errors, never()).rejectValue("giftDispatchDeadline", "secretSanta.giftDispatchDeadline.not.valid");
-  }
-
-  @Test
   void validate_maxPartyNumbers_null() {
+    when(validationProperties.getMinPartyMembers()).thenReturn(MIN_PARTY_MEMBERS);
     validator.validate(secretSanta, errors);
-    verify(errors).rejectValue("maxPartyMembers", "secretSanta.maxPartyMembers.not.valid");
+    verify(errors).rejectValue("maxPartyMembers",
+        "secretSanta.maxPartyMembers.not.valid",
+        new Object[]{MIN_PARTY_MEMBERS},
+        "Minimum Party Members is invalid.");
   }
 
   @Test
-  void validate_maxPartyNumbers_lessThanThree() {
+  void validate_maxPartyNumbers_lessThanMinimumAllowed() {
+    when(validationProperties.getMinPartyMembers()).thenReturn(MIN_PARTY_MEMBERS);
     when(secretSanta.getMaxPartyMembers()).thenReturn(2);
     validator.validate(secretSanta, errors);
-    verify(errors).rejectValue("maxPartyMembers", "secretSanta.maxPartyMembers.not.valid");
-  }
-
-  @Test
-  void validate_maxPartyNumbers_valid() {
-    when(secretSanta.getMaxPartyMembers()).thenReturn(3);
-    validator.validate(secretSanta, errors);
-    verify(errors, never()).rejectValue("maxPartyMembers", "secretSanta.maxPartyMembers.not.valid");
+    verify(errors).rejectValue(
+        "maxPartyMembers",
+        "secretSanta.maxPartyMembers.not.valid",
+        new Object[]{MIN_PARTY_MEMBERS},
+        "Minimum Party Members is invalid.");
   }
 
 }
