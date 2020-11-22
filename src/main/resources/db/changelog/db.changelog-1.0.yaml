@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: martin-mccann
+      comment: Create SECRET_SANTA table
+      changes:
+        - createTable:
+            tableName: SECRET_SANTA
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: MAX_GIFT_COST
+                  type: number
+                  constraints:
+                    nullable: false
+              - column:
+                  name: GIFT_DISPATCH_DEADLINE
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MAX_PARTY_MEMBERS
+                  type: number
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: martin-mccann
+      comment: Create PARTY_MEMBER table
+      changes:
+        - createTable:
+            tableName: PARTY_MEMBER
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMAIL_ADDRESS
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ADDRESS_LINE1
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ADDRESS_LINE2
+                  type: varchar(50)
+              - column:
+                  name: ADDRESS_CITY
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ADDRESS_POSTCODE
+                  type: varchar(8)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SECRET_SANTA_ID
+                  type: UUID
+                  constraints:
+                    foreignKeyName: FK_SECRET_SANTA_ID
+                    references: secret_santa(id)
+              - column:
+                  name: RECIPIENT_ID
+                  type: UUID
+                  constraints:
+                    foreignKeyName: FK_RECIPIENT_ID
+                    references: party_member(id)
+                    unique: true
+                    uniqueConstraintName: UNIQUE_RECIPIENT_ID
