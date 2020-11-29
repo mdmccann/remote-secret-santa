@@ -1,1 +1,1 @@
-web: java -jar target/remote-secret-santa-0.0.1-SNAPSHOT.jar
+web: java -jar -Dserver.port=$PORT target/remote-secret-santa-0.0.1-SNAPSHOT.jar
