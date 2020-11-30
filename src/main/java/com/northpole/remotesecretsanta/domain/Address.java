@@ -1,10 +1,14 @@
 package com.northpole.remotesecretsanta.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Column;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Address {
 
   @Column(name = "addressLine1")
