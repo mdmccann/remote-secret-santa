@@ -15,13 +15,15 @@ public class SecretSantaService {
 
   private final SecretSantaRepository secretSantaRepository;
   private final ValidationProperties validationProperties;
+  private final EmailService emailService;
 
   public SecretSanta run(UUID secretSantaId) {
     SecretSanta secretSanta = secretSantaRepository.findById(secretSantaId)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Secret santa with id %s could not be found", secretSantaId)));
 
     secretSanta.run(validationProperties);
-    // todo: Trigger recipient alerting
+
+    emailService.notifyParticipants(secretSanta);
 
     return secretSantaRepository.save(secretSanta);
   }

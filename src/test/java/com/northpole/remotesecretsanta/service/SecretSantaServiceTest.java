@@ -28,13 +28,15 @@ class SecretSantaServiceTest {
   @Mock
   private ValidationProperties validationProperties;
   @Mock
+  private EmailService emailService;
+  @Mock
   private SecretSanta secretSanta;
 
   private SecretSantaService secretSantaService;
 
   @BeforeEach
   void setUp() {
-    secretSantaService = new SecretSantaService(secretSantaRepository, validationProperties);
+    secretSantaService = new SecretSantaService(secretSantaRepository, validationProperties, emailService);
   }
 
   @Test
@@ -54,5 +56,12 @@ class SecretSantaServiceTest {
     when(secretSantaRepository.findById(SECRET_SANTA_ID)).thenReturn(Optional.of(secretSanta));
     secretSantaService.run(SECRET_SANTA_ID);
     verify(secretSanta).run(validationProperties);
+  }
+
+  @Test
+  void run_callsNotifyParticipantsOnEmailService() {
+    when(secretSantaRepository.findById(SECRET_SANTA_ID)).thenReturn(Optional.of(secretSanta));
+    secretSantaService.run(SECRET_SANTA_ID);
+    verify(emailService).notifyParticipants(secretSanta);
   }
 }

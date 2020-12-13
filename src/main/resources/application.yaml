@@ -2,6 +2,17 @@ spring:
   data:
     rest:
       basePath: /api
+  mail:
+    host: ${email.host}
+    port: ${email.port}
+    username: ${email.username}
+    password: ${email.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 validation:
   minGiftCost: 0
