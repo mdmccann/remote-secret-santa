@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class SecretSanta {
   private UUID id;
   @JsonIgnore
   @OneToMany(mappedBy = "secretSanta", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PartyMember> partyMembers;
+  private List<PartyMember> partyMembers = new ArrayList<>();
   private BigDecimal maxGiftCost;
   private LocalDate giftDispatchDeadline;
   private Integer maxPartyMembers;
