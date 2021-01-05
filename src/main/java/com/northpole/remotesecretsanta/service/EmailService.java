@@ -36,7 +36,7 @@ public class EmailService {
           .append("\n\n")
           .append(partyMember.getRecipient().getAddress().getLine1()).append("\n");
 
-      if (nonNull(partyMember.getRecipient().getAddress().getLine2()) || !partyMember.getRecipient().getAddress().getLine2().trim().equals("")) {
+      if (nonNull(partyMember.getRecipient().getAddress().getLine2()) && !partyMember.getRecipient().getAddress().getLine2().trim().equals("")) {
         messageBuilder.append(partyMember.getRecipient().getAddress().getLine2()).append("\n");
       }
 

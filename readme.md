@@ -142,6 +142,7 @@ The service has been built using the following tools/frameworks:
 - Java 11
 - Spring Boot / Rest
 - Liquibase
+- H2
 - Lombok
 - Greenmail
 - Hamcrest
